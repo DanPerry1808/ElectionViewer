@@ -9,16 +9,32 @@ import java.awt.Stroke;
 
 public class Button extends Element {
 	
+	// width in pixels of the border around the button
 	private final int BORDER_WIDTH = 2;
+	
+	// RGB colour of the button's background
 	private Color bgColour = new Color(120, 120, 120);
+	
+	// Necessary variables to deal with generating height of text
 	private Font f;
 	private FontMetrics fm;
 	private int fHeight;
 	
+	// Text rendered inside the button
 	private String label;
 	
+	// Private boolean to hold whether a click is detected
+	// but not yet been dealt with
 	private boolean pressed;
 	
+	/**
+	 * A basic clickable button GUI element
+	 * @param x The top left x-coord to draw it to the screen at
+	 * @param y The top left y-coord to draw it to the screen at
+	 * @param width The width in pixels that the Button takes up
+	 * @param height The height in pixels that the Button takes up
+	 * @param l The string rendered in the button as its label
+	 */
 	public Button(int x, int y, int width, int height, String l) {
 		super(x, y, width, height);
 		label = l;
@@ -26,6 +42,12 @@ public class Button extends Element {
 		pressed = false;
 	}
 	
+	/**
+	 * Checks if mouse is inside button, if it is then the background colour
+	 * is made lighter
+	 * @param x The x coordinate of the mouse
+	 * @param y The y coordinate of the mouse
+	 */
 	@Override
 	public void onHover(int x, int y) {
 		if(isInRect(rect, x, y)) {
@@ -35,6 +57,12 @@ public class Button extends Element {
 		}
 	}
 	
+	/**
+	 * When called it checks if the mouse is within the button. If it is,
+	 * the internal state variable pressed is set to true.
+	 * Note: this method should only be called once a mouse click
+	 * has been detected
+	 */
 	@Override
 	public void onClick(int x, int y) {
 		if (isInRect(rect, x, y)) {
@@ -45,6 +73,7 @@ public class Button extends Element {
 	@Override
 	public void draw(Graphics2D g) {
 		
+		// Gets the height of the label text
 		if (fm == null) {
 			fm = g.getFontMetrics(f);
 			fHeight = fm.getHeight();
@@ -72,6 +101,13 @@ public class Button extends Element {
 		
 	}
 	
+	/**
+	 * If there has been a press since the last update, return true then set
+	 * the internal state variable pressed to false so the object knows the
+	 * click has been dealt with
+	 * @return Whether there has been a click inside the button since the
+	 * method was last called
+	 */
 	public boolean getPressed() {
 		if (pressed) {
 			pressed = false;
@@ -80,7 +116,7 @@ public class Button extends Element {
 			return false;
 		}
 	}
-	
+
 	public void setPressed(boolean b) {
 		pressed = b;
 	}

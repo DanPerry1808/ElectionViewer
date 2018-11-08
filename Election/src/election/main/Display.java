@@ -25,12 +25,15 @@ public class Display extends Canvas implements Runnable{
 	private StateManager sm;
 	private MouseTracker mt;
 	
-	// Menu stuff
+	// An ElementList is used here to make calling common methods between
+	// GUI Elements easier
 	private ElementList menuElements;
 	
+	// GUI elements used in the main menu
 	private Button b;
 	private Dropdown conList;
 	
+	// Font height calculation stuff
 	private FontMetrics fm;
 	private int fHeight;
 	private Font f;
@@ -38,14 +41,23 @@ public class Display extends Canvas implements Runnable{
 	// Constit stuff
 	private ConstitScreen cs;
 	
+	/**
+	 * Main class that deals with input and drawing to screen
+	 * Contains a main menu and the constituency screen
+	 * which it can switch between
+	 */
 	public Display() {
 		
+		// Reads in an array of constituency names from the DB
+		// for the drop down list
 		String[] constits = {};
 		constits = Queries.runScriptStr("read_con_names.py").toArray(constits);
 		
 		setFocusable(true);
 		requestFocus(true);
 		
+		// Creates StateManager to manage transition between this screen and
+		// the constituency viewer screen
 		sm = new StateManager(State.MENU);
 		
 		mt = new MouseTracker();
@@ -54,10 +66,13 @@ public class Display extends Canvas implements Runnable{
 		
 		menuElements = new ElementList();
 		
+		// GUI elements, button and drop down list inititalised
 		b = new Button(500, 100, 100, 60, "Open");
 		conList = new Dropdown(100, 100, 300, 60, 50, constits);
+		
 		f = new Font("Helvetica", Font.PLAIN, 24);
 		
+		// Adds GUI elements to the list of elements
 		menuElements.add(b);
 		menuElements.add(conList);
 		
@@ -66,12 +81,18 @@ public class Display extends Canvas implements Runnable{
 		start();
 	}
 	
+	/**
+	 * Initialises thread object and starts game loop
+	 */
 	public synchronized void start() {
 		running = true;
 		thread = new Thread(this, "Election");
 		thread.start();
 	}
 	
+	/**
+	 * Shuts down the program
+	 */
 	public synchronized void stop() {
 		running = false;
 		try {
@@ -81,21 +102,30 @@ public class Display extends Canvas implements Runnable{
 		}
 	}
 	
+	/**
+	 * Called when the Thread object is started.
+	 * Contains the main game loop
+	 */
 	public void run() {
+		
+		// Sets up timing variables to ensure program updates uniformly
 		long lastTime = System.nanoTime();
 		final double UPS = 60.0;
 		final double UPDATE_TIME = 1000000000.0 / UPS;
 		double delta = 0;
+		
+		// Running is true when the program is still active
 		while (running) {
+			
 			long now = System.nanoTime();
 			delta += (now - lastTime) / UPDATE_TIME;
 			lastTime = now;
 			
+			// If due for update, run update methods
 			while (delta >= 1) {
 				
-				// Menu input
+				// If StateManager is currently in Menu mode, run menu updates
 				if(sm.getCurrState() == State.MENU) {
-					// Runs update, check if it does anything
 					menuElements.update(mt.getX(), mt.getY());
 					//onHover for when the mouse hovers over stuff
 					menuElements.onHover(mt.getX(), mt.getY());
@@ -105,22 +135,33 @@ public class Display extends Canvas implements Runnable{
 						// If open button pressed
 						if (b.getPressed()) {
 							
+							// Change state to Constituency viewer screen
 							sm.changeState(State.CONSTIT);
+							// conID must have 1 added to it as conID is sent
+							// to the DB where IDs start from 1, not 0 like in
+							// the drop down list
 							int conID = conList.getCurrentOptionIndex() + 1;
 							cs.loadConstit(conID);
 						}
 					}
 					
+				// If in the constituency viewer screen
 				}else if(sm.getCurrState() == State.CONSTIT) {
 					cs.update(mt.getX(), mt.getY());
 					cs.onHover(mt.getX(), mt.getY());
 					if (mt.checkForClick()) {
 						cs.onClick(mt.getX(), mt.getY());
 						
+						// Checks if back button has been pressed
 						if(cs.getBack().getPressed()) {
+							// Change state back to menu and unload all
+							// variables inside the ConstitViewer so it can be
+							// used again
 							sm.changeState(State.MENU);
 							cs.unloadConstit();
 						}
+						
+						// Check each graph button on ConstitViewer has been pressed
 						if (cs.getVoteShareButton().getPressed()) {
 							cs.getGSM().changeState(GraphState.SHARE);
 						}
@@ -132,9 +173,11 @@ public class Display extends Canvas implements Runnable{
 						}
 					}
 				}
+				// Decrease delta shows update has been performed
 				delta--;
 			}
 			
+			// Makes sure window is ready to draw to before drawing
 			while (!isDisplayable()) {
 				try {
 					Thread.sleep(10);
@@ -142,11 +185,18 @@ public class Display extends Canvas implements Runnable{
 					e.printStackTrace();
 				}
 			}
+			
+			// Calling main drawing method
 			render();
 		}
 	}
 	
+	/**
+	 * This is the main drawing method
+	 */
 	public void render() {
+		
+		// Generating buffer strategy to draw to
 		BufferStrategy bs = getBufferStrategy();
 		if (bs == null) {
 			createBufferStrategy(3);
@@ -154,16 +204,21 @@ public class Display extends Canvas implements Runnable{
 		}
 		Graphics2D g = (Graphics2D)bs.getDrawGraphics();
 		
+		// Fills the entire screen with white to draw over last frame
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, Main.WIDTH, Main.HEIGHT);
 		g.setColor(Color.BLACK);
 		
+		// If in menu state, draw menu
 		if (sm.getCurrState() == State.MENU) {
 			
+			// Gets the height of the menu font
 			if (fm == null) {
 				fm = g.getFontMetrics(f);
 				fHeight = fm.getHeight();
 			}
+			
+			// Stores current font in tempFont so I can reset it to that later
 			Font tempFont = g.getFont();
 			g.setFont(f);
 			//Draw text
@@ -174,13 +229,16 @@ public class Display extends Canvas implements Runnable{
 			int borderWidth = 10;
 			Stroke tempStroke = g.getStroke();
 			g.setStroke(new BasicStroke(borderWidth));
-			g.drawRect(0, 0, Main.WIDTH - borderWidth, Main.HEIGHT - borderWidth);
+			g.drawRect(borderWidth, borderWidth, Main.WIDTH - (borderWidth * 2), Main.HEIGHT - (borderWidth * 4));
 			g.setStroke(tempStroke);
 			g.setFont(tempFont);
+			
+		// If in ConstitViewer, show it instead
 		}else if(sm.getCurrState() == State.CONSTIT) {
 			cs.draw(g);
 		}
 		
+		// Show the current frame
 		g.dispose();
 		bs.show();
 	}

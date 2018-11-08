@@ -18,8 +18,22 @@ public class Swing {
 		this.amount = amount;
 	}
 	
+	/**
+	 * @return A Party object representing the party that the swing is 
+	 * moving away from (decreased vote share)
+	 */
 	public PartyClass getFrom() {return from;}
+	
+	/**
+	 * @return A Party object representing the party that the swing is
+	 * moving towards (increased vote share)
+	 */
 	public PartyClass getTo() {return to;}
+	
+	/**
+	 * @return Returns a double representing the amount of swing from one
+	 * party to the other from. Eg. 10 = 10%
+	 */
 	public double getAmount() {return amount;}
 	
 	/**

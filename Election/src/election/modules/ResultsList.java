@@ -21,12 +21,23 @@ public class ResultsList extends Element {
 	private Font textFont;
 	private Font numFont;
 	
+	// Space between each row
 	private final int PADDING = 10;
 	private final int NAME_WIDTH = 200;
 	private final int VOTES_WIDTH = 100;
 	private final int ROW_HEIGHT = 40;
+	// Gap between the name bar and the votes bar
 	private final int GAP = 40;
 
+	/**
+	 * An object which draws a sorted list of results
+	 * @param x X coordinate to draw to
+	 * @param y Y coordinate to draw to
+	 * @param width Width of the element
+	 * @param height Height of the element
+	 * @param res ArrayList of results, should be sorted in descending order
+	 * with Total party appended to bottom
+	 */
 	public ResultsList(int x, int y, int width, int height, ArrayList<Result> res) {
 		super(x, y, width, height);
 		results = res;
@@ -38,12 +49,16 @@ public class ResultsList extends Element {
 	@Override
 	public void draw(Graphics2D g) {
 		
+		// Gets the heights of both fonts in use
 		if (fm == null) {
 			fm = g.getFontMetrics(numFont);
 			fHeightNum = fm.getHeight();
 			fm = g.getFontMetrics(textFont);
 			fHeightText = fm.getHeight();
 		}
+		
+		// For each results, draws a box with the party name and a box with
+		// their vote total
 		for (int i = 0; i < results.size(); i++) {
 			// Set to party colour
 			g.setColor(results.get(i).getParty().getColour());

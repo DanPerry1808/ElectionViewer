@@ -10,10 +10,19 @@ public class MouseTracker implements MouseListener, MouseMotionListener {
 	private int mouseY;
 	private boolean mouseClicked;
 	
+	/**
+	 * MouseTracker keeps track of the position of the mouse
+	 * and whether it has been clicked
+	 */
 	public MouseTracker() {
 		
 	}
 	
+	/**
+	 * If there has been a click registered, this returns true then sets
+	 * mouseClicked to false so this object knows the click has been handled
+	 * @return True if mouse click has happened, false if not
+	 */
 	public boolean checkForClick() {
 		if (mouseClicked) {
 			mouseClicked = false;
@@ -23,7 +32,14 @@ public class MouseTracker implements MouseListener, MouseMotionListener {
 		}
 	}
 	
+	/**
+	 * @return X coordinate of mouse pointer relative to top left of screen
+	 */
 	public int getX() {return mouseX;}
+	
+	/**
+	 * @return Y coordinate of mouse pointer relative to top left of screen
+	 */
 	public int getY() {return mouseY;}
 
 	@Override
@@ -32,6 +48,11 @@ public class MouseTracker implements MouseListener, MouseMotionListener {
 
 	}
 
+	/**
+	 * Whenever the mouse is moved, the variables storing the mouse coords
+	 *  are changed to the current mouse coords
+	 * @param e The event generated when the mouse is moved
+	 */
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		mouseX = e.getX();
@@ -57,6 +78,12 @@ public class MouseTracker implements MouseListener, MouseMotionListener {
 
 	}
 
+	/**
+	 * When the mouse is pressed, the method sets a private variable to true
+	 *  which is later checked against to see if any clicks have occurred since
+	 *  the last time the MouseListener was checked
+	 * @param e The event generated when the mouse was clicked
+	 */
 	@Override
 	public void mousePressed(MouseEvent e) {
 		mouseClicked = true;

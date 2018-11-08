@@ -51,20 +51,33 @@ public class Dropdown extends Element {
 		
 	}
 	
+	/**
+	 * Opens the menu to expand to show all options
+	 */
 	private void openMenu() {
 		open = true;
 		height = optionHeight * (options.length + 1);
 		listRect.setActive(true);
 	}
 	
+	/**
+	 * Stops showing all options and just the selected option
+	 */
 	private void closeMenu() {
 		open = false;
 		height = optionHeight;
 		listRect.setActive(false);
 	}
 	
+	/**
+	 * When a click is detected, checks whether is is inside the dropdown box
+	 * and acts accordingly
+	 */
 	@Override
 	public void onClick(int mouseX, int mouseY) {
+		
+		// If mouse inside the expand toggle button
+		// toggle whether the menu is open or not
 		if(isInRect(buttonRect, mouseX, mouseY)) {
 			if(open) {
 				closeMenu();
@@ -73,6 +86,8 @@ public class Dropdown extends Element {
 			}			
 		}
 		
+		// If the menu is open and the mouse is in the list, change the
+		// currently selected option and close the menu
 		if (open) {
 			if (isInRect(listRect, mouseX, mouseY)) {
 				currOption = getSelectedOption(mouseX, mouseY);
@@ -94,10 +109,17 @@ public class Dropdown extends Element {
 		
 	}
 	
+	/**
+	 * @return The String inside the main box, the currently selected option
+	 */
 	public String getCurrentOptionString() {
 		return options[currOption];
 	}
 	
+	/**
+	 * @return The index in the array of options that the currently selected
+	 * option is at
+	 */
 	public int getCurrentOptionIndex() {
 		return currOption;
 	}

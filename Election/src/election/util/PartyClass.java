@@ -9,9 +9,10 @@ public class PartyClass {
 	private Color colour;
 
 	/**
-	 * Represents a party
+	 * Object which represents a party
 	 * @param name Official party name
-	 * @param shortName 2-4 character name for graphs Eg. CON for conservative, LAB for labour
+	 * @param shortName 2-4 character name for graphs 
+	 * Eg. CON for conservative, LAB for labour
 	 * @param c An RGB colour associated with the party
 	 */
 	public PartyClass(String name, String shortName, Color c) {
@@ -20,7 +21,19 @@ public class PartyClass {
 		colour = c;
 	}
 	
+	/**
+	 * @return The party's full name
+	 */
 	public String getName() {return name;}
+	
+	/**
+	 * @return A 2-4 character short hand representation of the party's name
+	 * Eg. Conservative = CON
+	 */
 	public String getShortName() {return shortName;}
+	
+	/**
+	 * @return A Color object of the party's associated colour
+	 */
 	public Color getColour() {return colour;}
 }

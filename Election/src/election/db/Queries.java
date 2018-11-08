@@ -1,7 +1,6 @@
 package election.db;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ public class Queries {
 	
 	private static String OS;
 	/**
-	 * Gets name of the OS running this
+	 * Gets name of the OS running this program
 	 * @return String of the OS name
 	 */
 	public static String getOSName() {
@@ -24,7 +23,6 @@ public class Queries {
 	}
 	
 	/**
-	 * Checks if the OS starts with 'Windows'
 	 * @return Whether OS name starts with Windows
 	 */
 	public static boolean isWindows() {
@@ -37,7 +35,7 @@ public class Queries {
 	
 	/**
 	 * Checks what command should be sent to the terminal to call python depending on OS
-	 * @return 'python' on windows, 'python3' on everything else
+	 * @return 'py' on Windows, 'python3' on everything else
 	 */
 	public static String getPythonVersion() {
 		if (isWindows()) {

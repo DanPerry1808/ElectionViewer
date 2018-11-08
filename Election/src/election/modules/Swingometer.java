@@ -11,6 +11,7 @@ import election.util.Swing;
 
 public class Swingometer extends Element {
 	
+	// The maximum amount of swing the graph can display, currently 15%
 	private final double maxSwing = 15.0;
 	
 	private Swing swing;
@@ -24,13 +25,28 @@ public class Swingometer extends Element {
 	private int fHeightBig;
 	private int width15;
 	
+	// Angle between 0 and 90 degrees that is added to default 90 degrees of
+	// portion of graph for the party wit increased voteshare
 	private int bigAngle;
+	// Angle between 0 and 90 degrees that represents the portion of the graph
+	// of the party with decreased voteshare
 	private int smallAngle;
+	// Radius of the swingometer
 	private final int RAD = 200;
+	// Diameter of the swingometer
 	private final int DIAM = RAD * 2;
+	// How far to right of module's starting x coord to draw swingometer graph
 	private final int X_OFFSET = 100;
+	// How far down of top of module's starting y coords to draw swingometer graph
 	private final int Y_OFFSET = 200;
 
+	/**
+	 * An object that draws a semicircle showing the change in vote share
+	 * between two parties
+	 * @param x The x coordinate to draw to screen
+	 * @param y The y coordinate to draw to screen
+	 * @param s The Swing object to represent
+	 */
 	public Swingometer(int x, int y, Swing s) {
 		super(x, y, 600, 600);
 		visible = false;
@@ -44,8 +60,15 @@ public class Swingometer extends Element {
 		smallAngle = 180 - bigAngle;
 	}
 	
+	/**
+	 * Calculates how large the angle of the party of increased vote share 
+	 * should be
+	 * @return An integer between 0 and 90 representing the angle
+	 * (with 90 subtracted) of the party with increased vote share
+	 */
 	private int calcAngle() {
 		double swAmount = swing.getAmount();
+		// Stops swingometer from going too far
 		if (swAmount > maxSwing) {
 			swAmount = maxSwing;
 		}
@@ -68,7 +91,7 @@ public class Swingometer extends Element {
 			g.setFont(bigSwingFont);
 			g.drawString(swingString, x + 10, y + fHeightBig);
 			//Draw amount
-			g.drawString(Double.toString(roundedSwing) + "%", x + 200, y + 10 + (2 * fHeightBig));
+			g.drawString(Double.toString(roundedSwing) + "%", x + 200, y + (2 * fHeightBig));
 			//Draw arcs
 			g.setFont(swingFont);
 			g.setColor(swing.getTo().getColour());

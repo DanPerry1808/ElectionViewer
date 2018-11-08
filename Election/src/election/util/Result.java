@@ -26,7 +26,14 @@ public class Result {
 		return ((double)votes / (double)turnout) * 100.0;
 	}
 	
+	/**
+	 * @return The PartyClass object representing the party that got the result
+	 */
 	public PartyClass getParty() {return party;}
+	
+	/**
+	 * @return The number of votes the party got in this constituency
+	 */
 	public int getVotes() {return votes;}
 	
 	/**

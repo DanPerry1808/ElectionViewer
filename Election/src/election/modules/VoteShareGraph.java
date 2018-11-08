@@ -41,6 +41,8 @@ public class VoteShareGraph extends Graph {
 	public void draw(Graphics2D g) {
 		
 		if(visible) {
+			
+			// Font height calculation
 			if(fm == null) {
 				fm = g.getFontMetrics(f);
 				fHeight = fm.getHeight();

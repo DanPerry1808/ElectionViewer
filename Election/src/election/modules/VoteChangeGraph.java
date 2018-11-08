@@ -65,6 +65,7 @@ public class VoteChangeGraph extends Graph{
 	public void draw(Graphics2D g) {
 		if (visible) {
 			
+			// Gets height of current font
 			if(fm == null) {
 				fm = g.getFontMetrics(f);
 				fHeight = fm.getHeight();
@@ -82,15 +83,19 @@ public class VoteChangeGraph extends Graph{
 				int barX = x + 50 + (i * BAR_WIDTH) + ((i + 1) * BAR_PADDING);
 				int barY;
 				g.setColor(bars[i].getColour());
+				
+				// Java does not allow shapes of negative height, so different
+				// drawing methods are needed for positive and negative
+				// changes in vote share
 				if (bars[i].getHeight() >= 0) {
+					// Positive vote share change bar
 					barY = y + 50 + HALF_Y_AXIS - bars[i].getHeight();
-					//Positive vc
 					g.fillRect(barX, barY, BAR_WIDTH, bars[i].getHeight());
 					g.setColor(Color.BLACK);
 					g.drawString("+" + Double.toString(Math.round(res.get(i).getPercChange() * 10.0) / 10.0) + "%", barX + 20, barY - fHeight);
 				}else {
+					// Negative vote share change bar
 					barY = y + 50 + HALF_Y_AXIS;
-					//Negative vc
 					g.fillRect(barX, barY, BAR_WIDTH, Math.abs(bars[i].getHeight()));
 					g.setColor(Color.BLACK);
 					g.drawString(Double.toString(Math.round(res.get(i).getPercChange() * 10.0) / 10.0) + "%", barX + 20, barY - bars[i].getHeight() + fHeight);

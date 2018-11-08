@@ -10,7 +10,7 @@ You will need installed on your machine:
 - Python 3
 
 ## File
-The zip file containing the program is [here](https://drive.google.com/file/d/1c7kbuR2r1ekBas6hTW_JN4SDnW8Zr3p2/view?usp=sharing).
+The zip file containing the program is [here](https://drive.google.com/open?id=1pb9fdSqQk2TNRLXealoQj81yfQToXteA).
 
 # Adding new constituencies
 1. Open up the database with [DB Browser for SQLite](https://sqlitebrowser.org/)
@@ -20,3 +20,7 @@ Note: other than the parties listed in the 'Party' table, no other parties can b
 4. For each party standing, take their 'Party_ID' from the 'Party' table and enter it into the 'Party_ID' of the 'Results15' table. Then enter the number of votes that party got in that election
 5. Repeat steps 3 and 4 for the 'Results17' table
 6. Press 'Write Changes'
+
+# Known Issues
+- All parties are currently hardcoded into the code in PartiesList.java
+- Drop down list on main menu currently limited by height of the screen and has no scroll bar

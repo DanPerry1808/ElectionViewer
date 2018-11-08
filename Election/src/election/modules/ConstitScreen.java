@@ -40,6 +40,13 @@ public class ConstitScreen extends Element{
 	private ArrayList<VSCResult> vsc;
 	private Swing swing;
 
+	/**
+	 * The screen that shows information about a chosen constituency
+	 * @param x The x coordinate to render at
+	 * @param y The y coordinate to render at
+	 * @param width The width of the screen
+	 * @param height The height of the screen
+	 */
 	public ConstitScreen(int x, int y, int width, int height) {
 		super(x, y, width, height);
 		el = new ElementList();
@@ -47,15 +54,24 @@ public class ConstitScreen extends Element{
 		
 	}
 	
+	/**
+	 * Loads all data for a given constituency from the DB and calculates
+	 * the values needed for the graphs to be displayed
+	 * @param conID The ID of the constituency to be displayed in the DB.
+	 * This is equal to its index in the drop down list in the menu + 1
+	 */
 	public void loadConstit(int conID) {
-		//Get Constituency name
+		//Get Constituency name from DB
 		name = Queries.runScriptStrSingle("get_con_name.py " + Integer.toString(conID));
+		
 		// Get votes as a Result[] ordered by votes descending
 		ArrayList<Result> res15 = Queries.getResultfromScript("get_votes_15.py " + Integer.toString(conID));
 		ArrayList<Result> res17 = Queries.getResultfromScript("get_votes_17.py " + Integer.toString(conID));
+		
 		// Calc turnout for both years
 		turnout15 = sumVotes(res15);
 		turnout17 = sumVotes(res17);
+		
 		//Calc voteshare change
 		// 2 space array for top 2 parties' voteshare changes
 		topVsc = new double[2];
@@ -68,12 +84,20 @@ public class ConstitScreen extends Element{
 				topVsc[i] = vsc.get(i).getPercChange();
 			}
 		}
+		
+		// Adds the total number of votes to each year's results list as a
+		// separate entry
+		// Note: parties[0] is not technically a real party but is called
+		//Total and is only used for displaying total number of votes
 		res15.add(new Result(PartyList.parties[0], turnout15));
 		res17.add(new Result(PartyList.parties[0], turnout17));
-		//Calc swing
+		
+		//Calculates swing as a Swing object
 		swing = Swing.createSwing(res17.get(0).getParty(), topVsc[0], res17.get(1).getParty(), topVsc[1]);
-		// Calc majority
+		
+		// Calculate majority and store as Majority object
 		majority17 = new Majority(res17.get(0).getParty(), res17.get(0).getVotes() - res17.get(1).getVotes());
+		
 		//Start of module init
 		nb = new NameBar(0, 0, Main.WIDTH, 100, res17.get(0).getParty(), res15.get(0).getParty(), majority17);
 		nb.setName(name);
@@ -86,13 +110,16 @@ public class ConstitScreen extends Element{
 		swingButton = new Button(420, 320, 140, 50, "Swingometer");
 		swingButton.setFont(f);
 		
-		// I have to clone the ArrayList so that the VoteShareGraph does not modify the original
+		// I have to clone the ArrayList so that the VoteShareGraph
+		// does not modify the original
 		ArrayList<Result> clone = (ArrayList<Result>) res17.clone();
 		vsg = new VoteShareGraph(580, 120, clone);
 		vcg = new VoteChangeGraph(580, 120, vsc);
 		sw = new Swingometer(580, 120, swing);
 		back = new Button(10, 600, 70, 40, "Back");
 		back.setFont(f);
+		
+		// Adds all graphs and GUI elements to the ElementList
 		el.add(nb);
 		el.add(rl);
 		el.add(voteShareButton);
@@ -134,8 +161,9 @@ public class ConstitScreen extends Element{
 		}
 		return sum;
 	}
-	
+
 	public void draw(Graphics2D g) {
+		// Only draws to the screen if all modules are loaded
 		if(loaded) {
 			el.draw(g);
 		}else {
@@ -143,18 +171,54 @@ public class ConstitScreen extends Element{
 		}
 	}
 	
+	/**
+	 * @return The 'Back' button object of the screen which returns the user
+	 * to the constituency select screen
+	 */
 	public Button getBack() {return back;}
+	
+	/**
+	 * @return The button object of the screen which switches the graph view
+	 * to the Vote Share graph
+	 */
 	public Button getVoteShareButton() {return voteShareButton;}
+	
+	/**
+	 * @return The button object of the screen which switches the graph view
+	 * to the Vote Share Change graph
+	 */
 	public Button getVoteChangeButton() {return voteChangeButton;}
+	
+	/**
+	 * @return The button object of the screen which switches the graph view
+	 * to the Swingometer graph
+	 */
 	public Button getSwingButton() {return swingButton;}
 	
+	/**
+	 * @return The GraphStateManager currently in use by this object
+	 */
 	public GraphStateManager getGSM() {return gsm;}
 	
+	/**
+	 * Passes mouse coord info onto all elements on the screen
+	 * Updates states of which graph to show based on GraphStateManager
+	 * 
+	 * @param xCoord The x coordinate of the mouse relative
+	 * to the top left of the screen
+	 * @param yCoord The y coordinate of the mouse relative
+	 * to the top left corner of the screen
+	 */
 	public void update(int xCoord, int yCoord) {
+		// Updates each element on the screen
 		el.update(xCoord, yCoord);
+		
+		// If there is a graph module that needs enabling
+		// Check which one it is and set it to visible
 		if (gsm.getToEnable()) {
 			for (int i = 0; i < gsm.getEnable().length; i++) {
 				if (gsm.getEnable()[i]) {
+					// Inform GSM that enable has been done
 					gsm.enable(GraphState.values()[i]);
 					if(i == 0) {
 						vsg.setVisible(true);
@@ -165,12 +229,16 @@ public class ConstitScreen extends Element{
 					}
 				}
 			}
+			// Inform GSM that all enables have been done
 			gsm.hasEnabled();
 		}
 		
+		// If there is a graph module that needs disabling
+		// Check which one it is and set it to not visible
 		if (gsm.getToDisable()) {
 			for (int i = 0; i < gsm.getDisable().length; i++) {
 				if (gsm.getDisable()[i]) {
+					// Inform GSM that disable has been done
 					gsm.disable(GraphState.values()[i]);
 					if (i == 0) {
 						vsg.setVisible(false);
@@ -181,6 +249,7 @@ public class ConstitScreen extends Element{
 					}
 				}
 			}
+			// Inform GSM that all disables have been done
 			gsm.hasDisabled();
 		}
 	}
