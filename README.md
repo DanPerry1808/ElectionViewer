@@ -23,7 +23,7 @@ Note: other than the parties listed in the 'Party' table, no other parties can b
 
 # Adding new parties
 1. Open up the database with [DB Browser for SQLite](https://sqlitebrowser.org/)
-2. Open the 'Party' table and make a new records
+2. Open the 'Party' table and make a new record
 3. Fill in 'Party_ID' with a new, unique value. 'Name' should be the official party name. 'Short_Name' should be a 2 - 5 character abreviation of the party name in upper case (Eg. Conservative is shortened to CON). The three Colour coloumns should contains an RGB colour to represent that party.
 4. Press 'Write Changes'
 
