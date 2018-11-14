@@ -113,9 +113,12 @@ public class ConstitScreen extends Element{
 		// I have to clone the ArrayList so that the VoteShareGraph
 		// does not modify the original
 		ArrayList<Result> clone = (ArrayList<Result>) res17.clone();
+		
+		// Initialises the 3 different graphs
 		vsg = new VoteShareGraph(580, 120, clone);
 		vcg = new VoteChangeGraph(580, 120, vsc);
 		sw = new Swingometer(580, 120, swing);
+		
 		back = new Button(10, 600, 70, 40, "Back");
 		back.setFont(f);
 		
@@ -129,6 +132,8 @@ public class ConstitScreen extends Element{
 		el.add(vcg);
 		el.add(sw);
 		el.add(back);
+		
+		// Sets GSM to default state (vote share graph)
 		gsm = new GraphStateManager(GraphState.SHARE);
 		loaded = true;
 	}

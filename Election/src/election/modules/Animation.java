@@ -34,6 +34,7 @@ public class Animation {
 	 * Starts the animation
 	 */
 	public void start() {
+		percDone = 0;
 		active = true;
 		deactFlag = false;
 	}

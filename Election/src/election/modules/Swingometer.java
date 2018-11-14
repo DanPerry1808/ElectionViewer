@@ -63,7 +63,7 @@ public class Swingometer extends Element {
 		bigAngleConst = 90 + calcAngle();
 		bigAngle = bigAngleConst;
 		smallAngle = 180 - bigAngle;
-		a = new Animation(2);
+		a = new Animation(0.7);
 	}
 	
 	/**
@@ -97,8 +97,10 @@ public class Swingometer extends Element {
 			g.setFont(bigSwingFont);
 			g.drawString(swingString, x + 10, y + fHeightBig);
 			
-			//Draw amount
-			g.drawString(Double.toString(roundedSwing) + "%", x + 200, y + (2 * fHeightBig));
+			//Draw amount if not animating
+			if (!a.getActive()) {
+				g.drawString(Double.toString(roundedSwing) + "%", x + 200, y + (2 * fHeightBig));
+			}
 			
 			//Draw arcs
 			g.setFont(swingFont);
