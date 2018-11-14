@@ -14,6 +14,8 @@ public class Swingometer extends Element {
 	// The maximum amount of swing the graph can display, currently 15%
 	private final double maxSwing = 15.0;
 	
+	private Animation a;
+	
 	private Swing swing;
 	private Font bigSwingFont;
 	private Font swingFont;
@@ -26,10 +28,12 @@ public class Swingometer extends Element {
 	private int width15;
 	
 	// Angle between 0 and 90 degrees that is added to default 90 degrees of
-	// portion of graph for the party wit increased voteshare
+	// portion of graph for the party with increased vote share
+	// One for changing, other should stay constant, needed of animation
 	private int bigAngle;
+	private int bigAngleConst;
 	// Angle between 0 and 90 degrees that represents the portion of the graph
-	// of the party with decreased voteshare
+	// of the party with decreased vote share
 	private int smallAngle;
 	// Radius of the swingometer
 	private final int RAD = 200;
@@ -56,8 +60,10 @@ public class Swingometer extends Element {
 		width15 = 0;
 		bigSwingFont = new Font("Helvetica", Font.PLAIN, 60);
 		swingString = "From " + swing.getFrom().getShortName() + " TO " + swing.getTo().getShortName();
-		bigAngle = 90 + calcAngle();
+		bigAngleConst = 90 + calcAngle();
+		bigAngle = bigAngleConst;
 		smallAngle = 180 - bigAngle;
+		a = new Animation(2);
 	}
 	
 	/**
@@ -90,30 +96,71 @@ public class Swingometer extends Element {
 			Font temp = g.getFont();
 			g.setFont(bigSwingFont);
 			g.drawString(swingString, x + 10, y + fHeightBig);
+			
 			//Draw amount
 			g.drawString(Double.toString(roundedSwing) + "%", x + 200, y + (2 * fHeightBig));
+			
 			//Draw arcs
 			g.setFont(swingFont);
+			// Drawing arc of party that swing is moving to
 			g.setColor(swing.getTo().getColour());
 			g.fillArc(x + X_OFFSET, y + Y_OFFSET, DIAM, DIAM, 0, bigAngle);
+			// Drawing arc of party that swing is moving away from
 			g.setColor(swing.getFrom().getColour());
 			g.fillArc(x + X_OFFSET, y + Y_OFFSET, DIAM, DIAM, bigAngle, smallAngle);
+			
+			// Draws outlines
 			g.setColor(Color.BLACK);
 			g.draw(new Arc2D.Double(x + X_OFFSET, y + Y_OFFSET, DIAM, DIAM, 0, bigAngle, Arc2D.PIE));
 			g.draw(new Arc2D.Double(x + X_OFFSET, y + Y_OFFSET, DIAM, DIAM, bigAngle, smallAngle, Arc2D.PIE));
+			
 			// Draw center line
 			g.setColor(new Color(100, 100, 100));
 			g.drawLine(x + X_OFFSET + RAD, y + Y_OFFSET - 20, x + X_OFFSET + RAD, y + 200 + RAD);
+			
 			//Draw number text
 			g.setColor(Color.BLACK);
 			g.drawString("0%", x + X_OFFSET - 10 + RAD, y + Y_OFFSET - fHeight);
 			g.drawString("15%", x + X_OFFSET - width15, y + Y_OFFSET + RAD);
 			g.drawString("15%", x + X_OFFSET + DIAM, y + Y_OFFSET + RAD);
+			
 			//Draw border
 			g.setFont(temp);
 			g.setColor(Color.BLACK);
 			g.drawRect(x, y, width, height);
 		}
+	}
+	
+	public void update(int mouseX, int mouseY) {
+		a.update();
+		
+		//Calculate animation stuff if active
+		if (a.getActive()) {
+			bigAngle = (int)Math.round(90 + ((bigAngleConst - 90) * a.getPercDone()));
+			smallAngle = 180 - bigAngle;
+		} else if (a.getDeactFlag()) {
+			// Run on the frame immediately after the animation finishes
+			// and only run once
+			bigAngle = bigAngleConst;
+			smallAngle = 180 - bigAngle;
+			a.deact();
+		}
+	}
+	
+	/**
+	 * Called when component is activated by GSM
+	 */
+	public void activate() {
+		visible = true;
+		a.start();
+	}
+	
+	/**
+	 * Called when component is deactivated by GSM
+	 */
+	public void deactivate() {
+		visible = false;
+		a.reset();
 	}
 
 }

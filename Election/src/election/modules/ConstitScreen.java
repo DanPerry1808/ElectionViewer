@@ -221,11 +221,11 @@ public class ConstitScreen extends Element{
 					// Inform GSM that enable has been done
 					gsm.enable(GraphState.values()[i]);
 					if(i == 0) {
-						vsg.setVisible(true);
+						vsg.activate();
 					}else if (i == 1) {
-						vcg.setVisible(true);
+						vcg.activate();
 					} else if (i == 2) {
-						sw.setVisible(true);
+						sw.activate();
 					}
 				}
 			}
@@ -241,11 +241,11 @@ public class ConstitScreen extends Element{
 					// Inform GSM that disable has been done
 					gsm.disable(GraphState.values()[i]);
 					if (i == 0) {
-						vsg.setVisible(false);
+						vsg.deactivate();
 					}else if (i == 1) {
-						vcg.setVisible(false);
+						vcg.deactivate();
 					}else if (i == 2) {
-						sw.setVisible(false);
+						sw.deactivate();
 					}
 				}
 			}
