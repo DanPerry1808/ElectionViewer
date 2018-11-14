@@ -10,7 +10,7 @@ You will need installed on your machine:
 - Python 3
 
 ## File
-The zip file containing the program is [here](https://drive.google.com/open?id=16Uex33uvZboJzd-_BFEAPB4yUrLYwkOK).
+The zip file containing the program is [here](https://drive.google.com/open?id=13R07CU-RByTnDXSHuKZ1RaCl6QUt_Rbb).
 
 # Adding new constituencies
 1. Open up the database with [DB Browser for SQLite](https://sqlitebrowser.org/)
@@ -21,6 +21,11 @@ Note: other than the parties listed in the 'Party' table, no other parties can b
 5. Repeat steps 3 and 4 for the 'Results17' table
 6. Press 'Write Changes'
 
+# Adding new parties
+1. Open up the database with [DB Browser for SQLite](https://sqlitebrowser.org/)
+2. Open the 'Party' table and make a new records
+3. Fill in 'Party_ID' with a new, unique value. 'Name' should be the official party name. 'Short_Name' should be a 2 - 5 character abreviation of the party name in upper case (Eg. Conservative is shortened to CON). The three Colour coloumns should contains an RGB colour to represent that party.
+4. Press 'Write Changes'
+
 # Known Issues
-- All parties are currently hardcoded into the code in PartiesList.java
 - Drop down list on main menu currently limited by height of the screen and has no scroll bar

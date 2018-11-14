@@ -1,10 +1,12 @@
 package election.db;
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import election.util.PartyClass;
 import election.util.PartyList;
 import election.util.Result;
 
@@ -107,13 +109,36 @@ public class Queries {
 			BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			while((s = br.readLine()) != null) {
 				splitLine = s.split(" ");
-				output.add(new Result(PartyList.parties[Integer.parseInt(splitLine[0])], Integer.parseInt(splitLine[1])));
+				output.add(new Result(PartyList.getParties().get(Integer.parseInt(splitLine[0])), Integer.parseInt(splitLine[1])));
 			}
 			p.waitFor();
 			p.destroy();
 		}catch (IOException | InterruptedException e){
 			e.printStackTrace();
 		}
+		return output;
+	}
+	
+	public static ArrayList<PartyClass> getParties(String pyFile) {
+		ArrayList<PartyClass> output = new ArrayList<PartyClass>();
+		output.add(new PartyClass("Total", "TOT", new Color(255, 255, 255)));
+		String s;
+		String[] splitLine;
+		Process p;
+		try {
+			p = Runtime.getRuntime().exec(getPythonVersion() + " python/" + pyFile);
+			BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+			while ((s = br.readLine()) != null) {
+				splitLine = s.split("/");
+				Color c = new Color(Integer.parseInt(splitLine[2]), Integer.parseInt(splitLine[3]), Integer.parseInt(splitLine[4]));
+				output.add(new PartyClass(splitLine[0], splitLine[1], c));
+			}
+			p.waitFor();
+			p.destroy();
+		} catch (IOException | InterruptedException e) {
+			e.printStackTrace();
+		}
+		
 		return output;
 	}
 }

@@ -89,8 +89,8 @@ public class ConstitScreen extends Element{
 		// separate entry
 		// Note: parties[0] is not technically a real party but is called
 		//Total and is only used for displaying total number of votes
-		res15.add(new Result(PartyList.parties[0], turnout15));
-		res17.add(new Result(PartyList.parties[0], turnout17));
+		res15.add(new Result(PartyList.getParties().get(0), turnout15));
+		res17.add(new Result(PartyList.getParties().get(0), turnout17));
 		
 		//Calculates swing as a Swing object
 		swing = Swing.createSwing(res17.get(0).getParty(), topVsc[0], res17.get(1).getParty(), topVsc[1]);
