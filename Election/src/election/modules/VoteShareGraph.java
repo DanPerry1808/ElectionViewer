@@ -47,6 +47,7 @@ public class VoteShareGraph extends Graph {
 				fm = g.getFontMetrics(f);
 				fHeight = fm.getHeight();
 			}
+			
 			Font temp = g.getFont();
 			g.setFont(f);
 			//Draw axis
@@ -57,9 +58,18 @@ public class VoteShareGraph extends Graph {
 			//Draw bars and text above it
 			for (int i = 0; i < bars.length; i++) {
 				g.setColor(bars[i].getColour());
-				g.fillRect(x + 50 + (i * BAR_WIDTH) + ((i + 1) * BAR_PADDING), y + 50 + Y_AXIS_LENGTH - bars[i].getHeight(), BAR_WIDTH, bars[i].getHeight());
-				g.setColor(Color.BLACK);
-				g.drawString(Double.toString(Math.round(results.get(i).toPerc(turnout) * 10.0) / 10.0) + "%", x + 70 + (i * BAR_WIDTH) + ((i + 1) * BAR_PADDING), y + 40 + Y_AXIS_LENGTH - bars[i].getHeight());
+				int barHeight = bars[i].getHeight();
+				
+				// If animation active, calculate bar height based on progress
+				if (a.getActive()) {
+					barHeight = (int)Math.round(bars[i].getHeight() * a.getPercDone());
+				}
+				int yPos = y + 50 + Y_AXIS_LENGTH - barHeight;
+				g.fillRect(x + 50 + (i * BAR_WIDTH) + ((i + 1) * BAR_PADDING), yPos, BAR_WIDTH, barHeight);
+				if (!a.getActive()) {
+					g.setColor(Color.BLACK);
+					g.drawString(Double.toString(Math.round(results.get(i).toPerc(turnout) * 10.0) / 10.0) + "%", x + 70 + (i * BAR_WIDTH) + ((i + 1) * BAR_PADDING), y + 40 + Y_AXIS_LENGTH - bars[i].getHeight());
+				}
 			}
 			
 			// Draw max value

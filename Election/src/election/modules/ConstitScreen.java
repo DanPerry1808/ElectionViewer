@@ -113,9 +113,12 @@ public class ConstitScreen extends Element{
 		// I have to clone the ArrayList so that the VoteShareGraph
 		// does not modify the original
 		ArrayList<Result> clone = (ArrayList<Result>) res17.clone();
+		
+		// Initialises the 3 different graphs
 		vsg = new VoteShareGraph(580, 120, clone);
 		vcg = new VoteChangeGraph(580, 120, vsc);
 		sw = new Swingometer(580, 120, swing);
+		
 		back = new Button(10, 600, 70, 40, "Back");
 		back.setFont(f);
 		
@@ -129,6 +132,8 @@ public class ConstitScreen extends Element{
 		el.add(vcg);
 		el.add(sw);
 		el.add(back);
+		
+		// Sets GSM to default state (vote share graph)
 		gsm = new GraphStateManager(GraphState.SHARE);
 		loaded = true;
 	}
@@ -221,11 +226,11 @@ public class ConstitScreen extends Element{
 					// Inform GSM that enable has been done
 					gsm.enable(GraphState.values()[i]);
 					if(i == 0) {
-						vsg.setVisible(true);
+						vsg.activate();
 					}else if (i == 1) {
-						vcg.setVisible(true);
+						vcg.activate();
 					} else if (i == 2) {
-						sw.setVisible(true);
+						sw.activate();
 					}
 				}
 			}
@@ -241,11 +246,11 @@ public class ConstitScreen extends Element{
 					// Inform GSM that disable has been done
 					gsm.disable(GraphState.values()[i]);
 					if (i == 0) {
-						vsg.setVisible(false);
+						vsg.deactivate();
 					}else if (i == 1) {
-						vcg.setVisible(false);
+						vcg.deactivate();
 					}else if (i == 2) {
-						sw.setVisible(false);
+						sw.deactivate();
 					}
 				}
 			}

@@ -4,7 +4,6 @@ import java.awt.BasicStroke;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.awt.image.BufferStrategy;
@@ -19,6 +18,10 @@ import election.modules.GraphState;
 public class Display extends Canvas implements Runnable{
 	
 	private static final long serialVersionUID = 1L;
+	
+	// Number of update calls the program makes every second
+	public static final int UPS = 60;
+	
 	private Thread thread;
 	private boolean running = false;
 	
@@ -33,9 +36,6 @@ public class Display extends Canvas implements Runnable{
 	private Button b;
 	private Dropdown conList;
 	
-	// Font height calculation stuff
-	private FontMetrics fm;
-	private int fHeight;
 	private Font f;
 	
 	// Constit stuff
@@ -110,8 +110,7 @@ public class Display extends Canvas implements Runnable{
 		
 		// Sets up timing variables to ensure program updates uniformly
 		long lastTime = System.nanoTime();
-		final double UPS = 60.0;
-		final double UPDATE_TIME = 1000000000.0 / UPS;
+		final double UPDATE_TIME = 1000000000.0 / (double)UPS;
 		double delta = 0;
 		
 		// Running is true when the program is still active
@@ -211,12 +210,6 @@ public class Display extends Canvas implements Runnable{
 		
 		// If in menu state, draw menu
 		if (sm.getCurrState() == State.MENU) {
-			
-			// Gets the height of the menu font
-			if (fm == null) {
-				fm = g.getFontMetrics(f);
-				fHeight = fm.getHeight();
-			}
 			
 			// Stores current font in tempFont so I can reset it to that later
 			Font tempFont = g.getFont();
