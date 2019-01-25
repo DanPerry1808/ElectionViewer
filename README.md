@@ -1,16 +1,13 @@
 # ElectionViewer
 A piece of software for viewing graphs of UK election results. Warning: bodged together during a hackathon
 
-# Download
-This software works on both Windows and Linux machines. It might work on MacOS but I don't own a Mac so I couldn't test it. Just download the zip file below and extract it to its own folder. Then run Election.jar from inside the folder it is in
+# Download and Installation
+This software works on both Windows and Linux machines. It might work on MacOS but I don't own a Mac so I couldn't test it. Just download the zip file from the Releases section and extract it to its own folder. Then run Election.jar from inside the folder it is in
 
 ## Prerequisites
 You will need installed on your machine:
 - Java 8
 - Python 3
-
-## File
-The zip file containing the program is [here](https://drive.google.com/open?id=13R07CU-RByTnDXSHuKZ1RaCl6QUt_Rbb).
 
 # Adding new constituencies
 1. Open up the database with [DB Browser for SQLite](https://sqlitebrowser.org/)
